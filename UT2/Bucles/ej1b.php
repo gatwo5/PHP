@@ -1,15 +1,21 @@
-<?php
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <?php
+        $num="725";
+        $numBinario = "";
 
-    $decimal = 50;
-    $numInicial = $decimal;
-    $resto = "";
+        while ($num / 2 > 0.5 ) {
+            $numBinario = $numBinario.($num%2);
+            $num/=2;
+        }
 
-    while ($decimal <= 0) {
-
-        $resto = $resto.($decimal % 2);
-        $decimal = $decimal / 2;
-
-    }
-
-    print ("Número ". $numInicial . " en binario = " . strrev($resto));
-?>
+        echo strrev($numBinario);
+    ?>
+</body>
+</html>
