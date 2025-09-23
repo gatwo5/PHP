@@ -8,15 +8,18 @@
 <body>
 
     <?php
-    $ip="192.168.16.100/21";
+    $ip="192.168.16.100/16";
     $ipSinMascara = substr($ip,0,strpos($ip,"/"));
     $mascara = substr($ip, strpos($ip, "/") + 1);
-
     $ipBinarioDividida = (explode('.',$ipSinMascara));
     $ipBinarioJunta = "";
     $ipHost="";
     $ipRed="";
     $ipBroadcast="";
+    $ipRedJunta = "";
+    $ipBroadcastJunta ="";
+    $numerosRed;
+    $numerosBroadcast;
 
     echo "IP ".$ip."<br>";
     echo "Mascara ".$mascara."<br>";
@@ -35,10 +38,50 @@
     $ipRed = str_replace("1","0",$ipRed);
     $ipBroadcast = str_replace("0","1",$ipRed);
 
-    echo $ipHost."<br>";
-    echo $ipRed."<br>";
-    echo $ipBroadcast;
+    //Volver a colocarlos
 
+    $ipRedJunta = $ipHost.$ipRed;
+    $ipBroadcastJunta = $ipHost.$ipBroadcast;
+
+    for ($i=0; $i <= 3; $i++) { 
+        $numerosRed[$i] = bindec(substr($ipRedJunta,$i*8,8));
+        $numerosBroadcast[$i] = bindec(substr($ipBroadcastJunta,$i*8,8));
+    }
+
+    //Escribir red y broadcast
+
+    echo "Dirección Red: ";
+
+    for ($i=0; $i <= 3; $i++) { 
+        echo $numerosRed[$i].".";
+    }
+
+    echo "<br>";
+    echo "Dirección Broadcast: ";
+
+    for ($i=0; $i <= 3; $i++) { 
+        echo $numerosBroadcast[$i].".";
+    }
+
+    echo "<br>";
+
+    //Escribir rango
+
+    echo "Rango: ";
+
+    for ($i=0; $i <= 2; $i++) { 
+        echo $numerosRed[$i].".";
+    }
+
+    echo ($numerosRed[3] + 1). " a ";
+
+    
+
+    for ($i=0; $i <= 2; $i++) { 
+        echo $numerosBroadcast[$i].".";
+    }
+
+    echo $numerosBroadcast[3] - 1;
     ?>
     
 </body>
