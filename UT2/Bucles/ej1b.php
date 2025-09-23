@@ -7,11 +7,17 @@
 </head>
 <body>
     <?php
-        $num="2";
+        $num="127";
         $numInicial = $num;
         $numBinario = "";
+        $noEsCero = true;
 
-        while ($num / 2 > 0.4 ) {
+        while ($noEsCero) {
+
+            if (floor($num / 2) == 0) {
+                $noEsCero = false;
+            }
+
             $numBinario = $numBinario.($num%2);
             $num/=2;
         }
