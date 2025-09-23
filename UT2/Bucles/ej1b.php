@@ -7,15 +7,16 @@
 </head>
 <body>
     <?php
-        $num="725";
+        $num="2";
+        $numInicial = $num;
         $numBinario = "";
 
-        while ($num / 2 > 0.5 ) {
+        while ($num / 2 > 0.4 ) {
             $numBinario = $numBinario.($num%2);
             $num/=2;
         }
 
-        echo strrev($numBinario);
+        echo "Numero ".$numInicial. " en binario = ".strrev($numBinario);
     ?>
 </body>
 </html>
