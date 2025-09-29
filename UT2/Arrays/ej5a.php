@@ -10,21 +10,34 @@
         $array_1 = array("Bases Datos", "Entornos Desarrollo", "Programación");
         $array_2 = array("Sistemas informáticos", "FOL", "Mecanizado");
         $array_3 = array("Desarrollo Web ES", "Desarrollo Web EC", "Despliegue", "Desarrollo Interfaces", "Inglés");
-        $union = array($array_1,$array_2,$array_3);
         
         $array_a = array();
-        $i_array_a = 0;
+        $indice_a = 0;
 
         $array_b = array();
         $array_c = array();
 
-        //apartado a)
+        //apartado a) y c)
 
-        for ($i=0; $i < 3; $i++) { 
-            for ($j=0; $j < count($union[$i]); $j++) { 
-                $array_a[$i_array_a] = $union[$i][$j];
-                $i_array_a++;
-            }
+        for ($i=0; $i < count($array_1); $i++) {
+            $array_a[$indice_a] = $array_1[$i];
+            $indice_a++;
+
+            array_push($array_c,$array_1[$i]);
+        }
+
+        for ($i=0; $i < count($array_2); $i++) { 
+            $array_a[$indice_a] = $array_2[$i];
+            $indice_a++;
+
+            array_push($array_c,$array_2[$i]);
+        }
+
+        for ($i=0; $i < count($array_3); $i++) { 
+            $array_a[$indice_a] = $array_3[$i];
+            $indice_a++;
+
+            array_push($array_c,$array_3[$i]);
         }
 
         echo "<h2> Apartado a) </h2>";
@@ -36,13 +49,8 @@
         echo "<h2> Apartado b) </h2>";
         var_dump($array_b);
 
-        //apartado c)
-        for ($i=0; $i < 3; $i++) { 
-            for ($j=0; $j < count($union[$i]); $j++) { 
-                array_push($array_c, $union[$i][$j]);
-            }
-        }
-
+        //apartado c) (imprimir)
+        
         echo "<h2> Apartado c) </h2>";
         var_dump($array_c);
     ?>
