@@ -57,6 +57,26 @@
 
         echo "</table>";
 
+        //Producto de A y B
+        $suma = 0;
+
+        echo "<h2>Producto de A y B</h2><table>";
+
+        for ($i=0; $i < 3; $i++) { 
+            echo "<tr>";
+            for ($j=0; $j < 3; $j++) { 
+                $suma = 0;
+
+                for ($k=0; $k < 3; $k++) { 
+                    $suma += ($matriz_a[$i][$k] * $matriz_b[$k][$j]);
+                }
+
+                echo "<td>" . $suma . "</td>";
+            }
+            echo "</tr>";
+        }
+
+        echo "</table>";
     ?>
 </body>
 </html>
