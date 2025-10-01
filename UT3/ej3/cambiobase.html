@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor numerico</title>
+</head>
+<body>
+    <h1>CAMBIO BASE</h1>
+    <form name="cambio_base" action="cambiobase.php" method="post">
+        <p>Numero Decimal:</p>
+        <input type="number" name="decimal">
+
+        <p>Convertir a: </p>
+        <select name="eleccion">
+            <option>binario</option>
+            <option>octal</option>
+            <option>hexadecimal</option>
+            <option>todos sistemas</option>
+        </select>
+
+        <br><br>
+
+        <input type="submit" value="enviar">
+        <input type="reset" value="borrar">
+    </form>
+</body>
+</html>
