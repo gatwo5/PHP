@@ -17,12 +17,12 @@
     function transformar_base($numero, $antigua_base, $nueva_base){
         $descoposicion_numeros = str_split(strrev($numero));
         $noEsCero = true;
-        $numero_final = 0;
-        $numero = 0;
+        $numero_final = "";
 
         // Primero se pasa a base 10 en caso de que no lo estuviese ya
 
         if ($antigua_base != 10) {
+            $numero = 0;
             for ($i=0; $i < count($descoposicion_numeros); $i++) { 
                 $descoposicion_numeros[$i] = $descoposicion_numeros[$i] * pow($antigua_base, $i);
                 $numero += $descoposicion_numeros[$i];
@@ -40,7 +40,7 @@
             $numero/=$nueva_base;
         }
 
-        return $numero_final;
+        return strrev($numero_final);
     }
 
     // Validar datos
