@@ -17,7 +17,17 @@
     // Comprobar si la ip es válida
     function comprobar_ip($ip,$ip_dividida){
         $ipvalida = true;
+        $ocurrencias_caracter = count_chars($ip,1);
 
+        //con count_chars se crea un array con key equivalente al numero ASCI del caracter con su value en funcion de las veces que aparece
+        
+        if ($ocurrencias_caracter['46'] == 3) {
+            
+        }
+
+        else {
+            
+        }
         return $ipvalida;
     }
 
