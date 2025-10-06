@@ -1,10 +1,13 @@
 <?php
 
     $ip = test_input($_POST['ip']);
+    $ip_binario = array(0,0,0,0);
     $ipvalida = comprobar_ip($ip);
 
     if ($ipvalida) {
-        echo "La ip introducida es válida";
+        $ip = explode('.',$ip);
+        transformar_ip_a_binario($ip, $ip_binario);
+        imprimir_por_pantalla($ip, $ip_binario);
     }
 
     else {
@@ -24,7 +27,7 @@
         if ($ocurrencias_caracter['46'] == 3) {
             $ip = explode('.',$ip);
 
-            while($ipvalida && $i > 4) {
+            while($ipvalida && $i < 4) {
                 
                 if ($ip[$i] < 0 || $ip[$i] > 255) {
                     $ipvalida = false;
@@ -42,10 +45,26 @@
     }
 
     // Transformar la IP a binario
-    function transformar_ip_a_binario($ip) {
-        $ip_binario = '';
+    function transformar_ip_a_binario($ip, &$ip_binario) {
+        for ($i=0; $i < count($ip); $i++) { 
+            $ip_binario[$i] = sprintf('%08b',$ip[$i]);
+        }
+    }
 
-        return $ip_binario;
+    // Imprimir por pantalla
+
+    function imprimir_por_pantalla($ip, $ip_binario){
+        echo 'IP notación decimal: ';
+
+        for ($i=0; $i < count($ip); $i++) { 
+            echo $ip[$i] . '.';
+        }
+
+        echo '<br> IP Binario: ';
+
+        for ($i=0; $i < count($ip_binario); $i++) { 
+            echo $ip_binario[$i] . '.';
+        }
     }
 
     // Validar datos
