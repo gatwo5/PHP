@@ -11,6 +11,7 @@
     $mano_jugadores = array(array(), array(), array(), array()); //Mano de cada jugador
     $valor_mano = array(0,0,0,0); //Valor de la mano de cada jugador
     $ganadores = array(); // Array en el que se guarda la posición de cada ganador
+    $premio = 0; // Premio total
 
     // Crear la baraja
     crearBaraja($baraja);
@@ -23,11 +24,15 @@
 
     obtenerGanadores($valor_mano, $ganadores);
 
+    // Obtener premio
+
+    obtenerPremio($premio,$apuesta, $valor_mano, $ganadores);
+
     // Imprimir por pantalla
 
-    imprimir($nombres, $numcartas, $apuesta, $mano_jugadores, $valor_mano, $ganadores);
+    imprimir($nombres, $numcartas, $apuesta, $mano_jugadores, $valor_mano, $ganadores, $premio);
 
     // Generar fichero
 
-    generarFichero($nombres, $apuesta, $valor_mano, $ganadores);
+    generarFichero($nombres, $premio, $valor_mano, $ganadores);
 ?>
