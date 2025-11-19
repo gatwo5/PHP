@@ -114,14 +114,35 @@
 
         try {
             $conn = conexion();
-            $stmt = $conn -> prepare("INSERT INTO almacena (num_almacen, id_producto, cantidad) VALUES(:num_almacen,:id_producto,:cantidad)");
-            $stmt -> bindParam(':num_almacen', $num_almacen);
+            $stmt = $conn -> prepare("SELECT cantidad FROM almacena WHERE id_producto = :id_producto AND num_almacen = :num_almacen");
             $stmt -> bindParam(':id_producto', $id_producto);
-            $stmt -> bindParam(':cantidad', $cantidad);
+            $stmt -> bindParam(':num_almacen', $num_almacen);
+            $stmt -> execute();
+            $stmt ->setFetchMode(PDO::FETCH_ASSOC);
+            $stock_inicial = $stmt ->fetchAll();   
+
+            // En caso de no existir, insertar nuevo registro
+
+            if(empty($stock_inicial)) {
+                $stmt = $conn -> prepare("INSERT INTO almacena (num_almacen, id_producto, cantidad) VALUES(:num_almacen,:id_producto,:cantidad)");
+                $stmt -> bindParam(':num_almacen', $num_almacen);
+                $stmt -> bindParam(':id_producto', $id_producto);
+                $stmt -> bindParam(':cantidad', $cantidad);
+            }
+
+            // En caso de existir el registro, actualizar las cantidades
+            
+            else {
+                $cantidad += $stock_inicial[0]['cantidad'];
+                $stmt = $conn -> prepare("UPDATE almacena SET cantidad=$cantidad WHERE id_producto = :id_producto AND num_almacen = :num_almacen");
+                $stmt -> bindParam(':id_producto', $id_producto);
+                $stmt -> bindParam(':num_almacen', $num_almacen);
+            }
+            
 
             $stmt -> execute();
 
-            echo '<br>Se han insertado ' . $cantidad . ' producto/s de ID ' . $id_producto . ' en el almacen ' . $num_almacen;
+            echo '<br>Ahora hay ' . $cantidad . ' producto/s de ID ' . $id_producto . ' en el almacen ' . $num_almacen;
         }
 
         catch(PDOException $e) {

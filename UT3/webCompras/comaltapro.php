@@ -92,7 +92,7 @@
             // Si está vacío
 
             if (empty($id_productos)) {
-                $id_producto = 'P0000';
+                $id_producto = 'P0001';
             }
 
             // Buscar el últim ID en caso contrario
