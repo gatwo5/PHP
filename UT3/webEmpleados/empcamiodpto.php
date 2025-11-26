@@ -84,8 +84,13 @@
         }
 
         catch (PDOException $e) {
-            echo "Error: " . $e->getMessage() . "<br>";
-            echo "Código de error: " . $e->getCode() . "<br>";
+            $errores = $e -> errorInfo;
+            $codigo_error = $errores[1];
+
+            if ($codigo_error == 1062) {
+                echo 'Duplicación de primary keys';
+            }
+
             $conn -> rollBack();
         }
 
