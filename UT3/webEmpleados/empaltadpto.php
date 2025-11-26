@@ -53,18 +53,13 @@
             $stmt ->setFetchMode(PDO::FETCH_ASSOC);
             $max_cod_dpto = $stmt ->fetchAll();
 
-            var_dump($max_cod_dpto);
-
             if ($max_cod_dpto[0]['max(cod_dpto)'] == null) {
                 $cod_dpto = 'D001';
-                echo 'vacio';
             }
 
             else {
                 $cod_dpto =  $max_cod_dpto[0]['max(cod_dpto)'];
                 $cod_dpto++;
-                
-                echo 'no vacio';
             }
 
             // Preparar el insert

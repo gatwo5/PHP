@@ -61,42 +61,16 @@
         $salario = test_input($_POST['salario']);
         $cod_dpto = test_input($_POST['cod_dpto']);
 
-        if (comprobar_dni($dni)) {
-
-            crear_empleado($dni, $nombre, $apellidos, $fecha_nac, $salario);
+        if(crear_empleado($dni, $nombre, $apellidos, $fecha_nac, $salario))
             insertar_emple_dpto($dni, $cod_dpto);
 
-            echo '<br> EMPLEADO INSERTADO';
-        }
-
-        else {
-            echo '<br>ERROR: DNI REPETIDO';
-        }
     }
 
-    // comprobar_dni($dni)
-    function comprobar_dni($dni) {
-        $dni_valido = false;
-
-        $conn = conexion();
-        $stmt = $conn -> prepare("SELECT dni FROM empleado WHERE dni = :dni");
-        $stmt -> bindParam(':dni', $dni);
-        $stmt -> execute();
-        $stmt ->setFetchMode(PDO::FETCH_ASSOC);
-        $buscar_dni = $stmt ->fetchAll();
-
-        if (empty($buscar_dni)) {
-            $dni_valido = true;
-        }
-
-        $conn = null;
-
-        return $dni_valido;
-    }
 
     // crear_empleado($dni, $nombre, $apellidos, $fecha_nac, $salario)
     function crear_empleado($dni, $nombre, $apellidos, $fecha_nac, $salario) {
-        
+        $empleado_insertado = false;
+
         try {
 
             $conn = conexion();
@@ -120,15 +94,25 @@
             $stmt -> execute();
 
             $conn -> commit();
+
+            $empleado_insertado = true;
+            echo '<br> EMPLEADO INSERTADO';
         }
 
         catch (PDOException $e) {
-            echo "Error: " . $e->getMessage() . "<br>";
-            echo "Código de error: " . $e->getCode() . "<br>";
+            $errores = $e -> errorInfo;
+            $codigo_error = $errores[1];
+
+            if ($codigo_error == 1062) {
+                echo 'Tabla Empleados: El DNI ya existe';
+            }
+
             $conn -> rollBack();
         }
 
         $conn = null;
+
+        return $empleado_insertado;
     }
 
     // insertar_emple_dpto($dni, $cod_dpto)
