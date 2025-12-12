@@ -32,7 +32,7 @@
         </select>
 
         <p>Cantidad:</p>
-        <input type="number">
+        <input type="number" name="cantidad">
 
         <br><br>
 
@@ -52,24 +52,88 @@
         $id_producto = test_input($_POST['id_producto']);
         $cantidad = test_input($_POST['cantidad']);
 
-        
+        // ---------
+
+        $hay_stock = buscar_stock($id_producto, $cantidad);
+
+        if ($hay_stock) {
+            comprar_producto($nif, $id_producto, $cantidad);
+            actualizar_stock($id_producto, $cantidad);
+
+            echo 'Producto comprado';
+        }
+
+        else {
+            echo '<br>No hay stock del producto';
+        }
     }
 
     // Buscar stock
 
     function buscar_stock($id_producto, $cantidad) {
-        $conn = conexion();
-        $stmt = $conn -> prepare(
-            "SELECT num_almacen, id_producto
-                    FROM almacena
-                    WHERE cantidad > :cantidad_comprar AND 
-                        id_producto = :id_producto"
-        );
+        $hay_stock = false;
+
+        try {
+            $conn = conexion();
+            $stmt = $conn -> prepare(
+                "SELECT sum(cantidad)
+                        FROM almacena
+                        WHERE id_producto = :id_producto"
+            );
+
+            $stmt -> bindParam(':id_producto', $id_producto);
+
+            $stmt -> execute();
+            $stmt -> setFetchMode(PDO::FETCH_ASSOC);
+            $productos_encontrados = $stmt -> fetchAll();
+
+            if ($productos_encontrados[0]['sum(cantidad)'] >= $cantidad) {
+                $hay_stock = true;
+            }
+        }
+
+        catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+
+        $conn = null;
+
+        return $hay_stock;
     }
 
     // Comprar producto
 
     function comprar_producto($nif, $id_producto, $cantidad) {
+
+        try {
+            $conn = conexion();
+            $conn -> beginTransaction();
+
+            $stmt = $conn -> prepare(
+                "INSERT INTO compra (nif, id_producto, fecha_compra, unidades)
+                 VALUES (:nif, :id_producto, curdate(), :unidades)"
+            );
+
+            $stmt -> bindParam(':nif', $nif);
+            $stmt -> bindParam(':id_producto', $id_producto);
+            $stmt -> bindParam(':unidades', $cantidad);
+
+            $stmt -> execute();
+
+            $conn -> commit();
+        }
+
+        catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            $conn -> rollBack();
+        }
+
+        $conn = null;
+    }
+
+    // Actualizar Stock
+
+    function actualizar_stock($id_producto, $cantidad) {
 
     }
 ?>
