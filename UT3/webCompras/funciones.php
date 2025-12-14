@@ -59,6 +59,30 @@ function mostrar_almacenes() {
     }
 }
 
+// mostrar_clientes()
+
+function mostrar_clientes() {
+
+    try {
+        $conn = conexion();
+        $stmt = $conn -> prepare("SELECT nif FROM cliente");
+        $stmt -> execute();
+        $stmt -> setFetchMode(PDO::FETCH_ASSOC);
+
+        $clientes = $stmt -> fetchAll();
+
+        // Imprimir valores
+        
+        foreach($clientes as $cliente) {
+            echo '<option value ="' . $cliente['nif'] . '">' . $cliente['nif'] . '</option>';
+        }
+    }
+    
+    catch(PDOException $e) {
+        echo "Error: " . $e->getMessage();
+    }
+}
+
 // test_input()
     function test_input($data) {
         $data = trim($data);
