@@ -58,5 +58,48 @@
 
     function mostrar_info_compra($nif , $fecha_desde , $fecha_hasta) {
 
+        $total_todas_compras = 0;
+
+        try {
+            $conn = conexion();
+
+            $stmt = $conn -> prepare(
+                "SELECT c.id_producto, sum(c.unidades), p.precio, p.nombre
+                        FROM compra c, producto p
+                        WHERE c.nif = :nif AND c.fecha_compra > :fecha_desde AND c.fecha_compra < :fecha_hasta AND c.id_producto = p.id_producto
+                        GROUP BY c.id_producto"
+            );
+
+            $stmt -> bindParam(':nif', $nif);
+            $stmt -> bindParam(':fecha_desde', $fecha_desde);
+            $stmt -> bindParam(':fecha_hasta', $fecha_hasta);
+
+            $stmt -> execute();
+            $stmt -> setFetchMode(PDO::FETCH_ASSOC);
+            $productos_comprados = $stmt -> fetchAll();
+
+            foreach ($productos_comprados as $productos) {
+                $id_producto = $productos['id_producto'];
+                $unidades = $productos['sum(c.unidades)'];
+                $precio = $productos['precio'];
+                $nombre = $productos['nombre'];
+                $total_compra_actual = $unidades * $precio;
+                $total_todas_compras += $total_compra_actual;
+
+                echo '<br>';
+                echo 'Producto: ' . $id_producto . '<br>';
+                echo 'Nombre: ' . $nombre . '<br>';
+                echo 'Unidades: ' . $unidades . '<br>';
+                echo 'Precio compra: ' . $total_compra_actual . '<br>';
+            }
+
+            echo '<br><br>Total compras: ' . $total_todas_compras;
+        }
+
+        catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+
+        $conn = null;
     }
 ?>
