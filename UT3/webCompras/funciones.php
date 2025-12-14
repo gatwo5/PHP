@@ -83,6 +83,60 @@ function mostrar_clientes() {
     }
 }
 
+    // comprobar_nif
+    function comprobar_nif($nif) {
+        $valido = false;
+
+        if (preg_match('/^[0-9]{8}[A-Z]$/',$nif)) {
+            $valido = true;
+        }
+
+        return $valido;
+    }
+
+    // Crear cliente
+    function crear_cliente($nif, $nombre, $apellido, $cp, $direccion, $ciudad, $clave) {
+        
+        try {
+            $conn = conexion();
+            $conn -> beginTransaction();
+
+            // Insertar cliente
+
+            $stmt = $conn -> prepare(
+                "INSERT INTO cliente (nif, nombre, apellido, cp, direccion, ciudad, clave)
+                 VALUES (:nif, :nombre, :apellido, :cp, :direccion, :ciudad, :clave)"
+            );
+
+            $stmt -> bindParam(':nif', $nif);
+            $stmt -> bindParam(':nombre', $nombre);
+            $stmt -> bindParam(':apellido', $apellido);
+            $stmt -> bindParam(':cp', $cp);
+            $stmt -> bindParam(':direccion', $direccion);
+            $stmt -> bindParam(':ciudad', $ciudad);
+            $stmt -> bindParam(':clave', $clave);
+
+            $stmt -> execute();
+
+            $conn -> commit();
+
+            echo 'Cliente creado con éxito';
+        }
+
+        catch (PDOException $e) {
+            $errores = $e -> errorInfo;
+            $codigo_error = $errores[1];
+
+            if ($codigo_error == 1062) {
+                echo 'El NIF ya existe';
+            }
+
+            $conn -> rollBack();
+        }
+
+        $conn = null;
+    }
+
 // test_input()
     function test_input($data) {
         $data = trim($data);

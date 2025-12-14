@@ -18,7 +18,7 @@
     
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
 
-        <h1>Alta de clientes</h1>
+        <h1>Registro de Clientes</h1>
 
         <p>NIF:</p>
         <input type="text" name="nif">
@@ -63,13 +63,15 @@
         $ciudad = test_input($_POST['ciudad']);
 
         if (comprobar_nif($nif)) {
-            crear_cliente($nif, $nombre, $apellido, $cp, $direccion, $ciudad);
+            $clave = strrev($apellido);
+            crear_cliente($nif, $nombre, $apellido, $cp, $direccion, $ciudad, $clave);
+            setcookie('usuario', $nombre, time() + (86400 * 30), "/");
+            setcookie('clave', $clave, time() + (86400 * 30), "/");
+            var_dump($_COOKIE);
         }
 
         else {
             echo 'Formato del NIF no válido';
         }
     }
-
-
 ?>
