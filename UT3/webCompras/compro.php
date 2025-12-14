@@ -1,4 +1,10 @@
-<?php include 'funciones.php' ?>
+<?php 
+
+include 'funciones.php';
+
+session_start();
+
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -19,12 +25,7 @@
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
         <h1>Compra de Productos</h1>
 
-        <p>Cliente:</p>
-
-        <select name="nif">
-            <?php mostrar_clientes() ?>
-        </select>
-
+        <h3>Bienvenido <?php echo $_SESSION['usuario'] ?></h3>
         <p>Producto:</p>
 
         <select name="id_producto">
@@ -44,11 +45,11 @@
 
 <?php 
 
-    $nif = $id_producto = $cantidad = '';
+    $nif = $_SESSION['nif'];
+    $id_producto = $cantidad = '';
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-        $nif = test_input($_POST['nif']);
         $id_producto = test_input($_POST['id_producto']);
         $cantidad = test_input($_POST['cantidad']);
 

@@ -1,4 +1,10 @@
-<?php include 'funciones.php' ?>
+<?php 
+
+include 'funciones.php';
+
+session_start();
+
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -19,13 +25,8 @@
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
 
         <h1>Consulta de Compras</h1>
-
-        <p>Cliente:</p>
-
-        <select name="nif">
-            <?php mostrar_clientes() ?>
-        </select>
-
+        <h3>Bienvenido <?php echo $_SESSION['usuario'] ?></h3>
+        
         <p>Fecha desde:</p>
 
         <input type="date" name="fecha_desde">
@@ -45,11 +46,11 @@
 
 <?php 
 
-    $nif = $fecha_desde = $fecha_hasta = '';
+    $nif = $_SESSION['nif'];
+    $fecha_desde = $fecha_hasta = '';
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-        $nif = test_input($_POST['nif']);
         $fecha_desde = test_input($_POST['fecha_desde']);
         $fecha_hasta = test_input($_POST['fecha_hasta']);
 
