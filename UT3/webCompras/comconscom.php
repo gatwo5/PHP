@@ -39,6 +39,10 @@ session_start();
 
         <button type="submit">Consultar</button>
         <button type="reset">Borrar</button>
+
+        <br><br>
+
+        <a href="compro.php">Comprar productos</a><br>
     </form>
 
 </body>

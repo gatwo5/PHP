@@ -38,6 +38,10 @@ session_start();
         <br><br>
 
         <button type="submit">Comprar</button>
+
+        <br><br>
+
+        <a href="comconscom.php">Consulta de compras</a>
     </form>
 
 </body>
