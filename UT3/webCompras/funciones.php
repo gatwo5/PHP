@@ -137,7 +137,17 @@ function mostrar_clientes() {
         $conn = null;
     }
 
-// test_input()
+    // Cerrar sesion
+
+    function cerrar_sesion() {
+        session_destroy();
+        session_unset();
+        setcookie("PHPSESSID", "", time() - 3600);
+        header("Location: comlogincli.php");
+        exit;
+    }
+
+    // test_input()
     function test_input($data) {
         $data = trim($data);
         $data = stripslashes($data);

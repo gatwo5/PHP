@@ -65,9 +65,6 @@
         if (comprobar_nif($nif)) {
             $clave = strrev($apellido);
             crear_cliente($nif, $nombre, $apellido, $cp, $direccion, $ciudad, $clave);
-            setcookie('usuario', $nombre, time() + (86400 * 30), "/");
-            setcookie('clave', $clave, time() + (86400 * 30), "/");
-            var_dump($_COOKIE);
         }
 
         else {

@@ -1,10 +1,17 @@
-<?php 
-
+<?php
 include 'funciones.php';
-
 session_start();
 
+if (isset($_POST['cerrar_sesion'])) {
+    cerrar_sesion();
+}
+
+if (!isset($_SESSION['usuario'])) {
+    header("Location: comlogincli.php");
+    exit;
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -22,6 +29,10 @@ session_start();
 </head>
 <body>
 
+    <form method="post">
+        <input type="submit" name="cerrar_sesion" value="cerrar sesion">
+    </form>
+
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
         <h1>Compra de Productos</h1>
 
@@ -37,7 +48,7 @@ session_start();
 
         <br><br>
 
-        <button type="submit">Comprar</button>
+        <button type="submit" name="comprar">Comprar</button>
 
         <br><br>
 
@@ -52,7 +63,7 @@ session_start();
     $nif = $_SESSION['nif'];
     $id_producto = $cantidad = '';
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['comprar'])) {
 
         $id_producto = test_input($_POST['id_producto']);
         $cantidad = test_input($_POST['cantidad']);
