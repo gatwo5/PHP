@@ -63,7 +63,7 @@
         $ciudad = test_input($_POST['ciudad']);
 
         if (comprobar_nif($nif)) {
-            crear_cliente($nif, $nombre, $apellido, $cp, $direccion, $ciudad);
+            crear_cliente($nif, $nombre, $apellido, $cp, $direccion, $ciudad, null);
         }
 
         else {

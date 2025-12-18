@@ -20,21 +20,16 @@
 </html>
 
 <?php 
+
+    include 'funciones.php';
+
     $nombre_categoria = "";
-
-    //Servidor
-
-    $servername = "localhost";
-    $username = "root";
-    $password = "rootroot";
-    $dbname="comprasWeb";
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $nombre_categoria = test_input($_POST['nombre_categoria']);
 
         try {
-            $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $conn = conexion();
             $stmt = $conn -> prepare("SELECT ID_CATEGORIA FROM categoria");
             $stmt -> execute();
 
@@ -72,13 +67,5 @@
         catch(PDOException $e) {
             echo "Error: " . $e->getMessage();
         }
-    }
-
-    // test_input()
-    function test_input($data) {
-        $data = trim($data);
-        $data = stripslashes($data);
-        $data = htmlspecialchars($data);
-        return $data;
     }
 ?>

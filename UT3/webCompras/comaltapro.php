@@ -1,3 +1,9 @@
+<?php 
+
+include 'funciones.php';
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,13 +28,8 @@
         <!-- Introducir las opciones de nombre categoria-->
 
         <?php 
-            $servername = "localhost";
-            $username = "root";
-            $password = "rootroot";
-            $dbname="comprasWeb";
-
-            $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            
+            $conn = conexion();
             $stmt = $conn -> prepare("SELECT nombre FROM categoria");
             $stmt -> execute();
 
@@ -114,13 +115,4 @@
             echo "Error: " . $e->getMessage();
         }
     }
-
-    // test_input()
-    function test_input($data) {
-        $data = trim($data);
-        $data = stripslashes($data);
-        $data = htmlspecialchars($data);
-        return $data;
-    }
-
 ?>

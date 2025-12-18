@@ -20,7 +20,7 @@
 </html>
 
 <?php 
-    include 'conexion.php';
+    include 'funciones.php';
 
     $localidad = "";
 
@@ -62,13 +62,5 @@
         catch(PDOException $e) {
             echo "Error: " . $e->getMessage();
         }
-    }
-
-    // test_input()
-    function test_input($data) {
-        $data = trim($data);
-        $data = stripslashes($data);
-        $data = htmlspecialchars($data);
-        return $data;
     }
 ?>
