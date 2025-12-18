@@ -54,7 +54,7 @@
             $_SESSION['nif'] = $nif;
             $_SESSION['usuario'] = $usuario;
 
-            echo '<a href="compro.php">Comprar productos</a><br>';
+            echo '<a href="comprocli.php">Comprar productos</a><br>';
             echo '<a href="comconscom.php">Consulta de compras</a>';
         }
 
