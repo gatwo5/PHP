@@ -35,7 +35,7 @@
 
 <?php
     include 'fu_globales.php';
-
+    
     $user = $password = '';
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -48,7 +48,11 @@
         $inicia_sesion = comprobar_credenciales($user, $password);
 
         if ($inicia_sesion) {
-            
+            session_start();
+            $_SESSION['user'] = $user;
+            header("Location: pe_inicio.php");
+        } else {
+            echo "Usuario o contraseña incorrectos";
         }
     }
 ?>

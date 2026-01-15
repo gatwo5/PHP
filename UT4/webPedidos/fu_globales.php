@@ -1,4 +1,132 @@
 <?php
+    // realizar_orden
+    function realizar_orden($customerNumber, $comments) {
+
+        $orderNumber = buscar_max_orderNumber();
+        
+        try {
+            $conn = conexion();
+            $conn -> beginTransaction();
+
+            $stmt = $conn -> prepare(
+                "INSERT INTO orders (orderNumber, orderDate, requiredDate, shippedDate, status, comments, customerNumber)
+                        VALUES (:orderNumber, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, null, 'Pending', :comments, :customerNumber)");
+
+            $stmt -> bindParam('orderNumber', $orderNumber);
+            $stmt -> bindParam("comments", $comments);
+            $stmt -> bindParam('customerNumber', $customerNumber);
+
+            $stmt -> execute();
+            $conn -> commit();
+        }
+
+        catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            $conn -> rollBack();
+        }
+
+        $conn = null;
+    }
+
+    function buscar_max_orderNumber() {
+        try {
+            $conn = conexion();
+
+            $stmt = $conn -> prepare(
+            "SELECT MAX(orderNumber)
+                    FROM orders");
+
+            $stmt -> execute();
+            $stmt -> setFetchMode(PDO::FETCH_ASSOC);
+            $ultima_orden = $stmt -> fetchAll();      
+            
+            $ultima_orden = $ultima_orden[0]['MAX(orderNumber)'];
+
+            return ($ultima_orden + 1);
+        }
+
+        catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+
+        $conn = null;
+    }
+
+    // mostrar_carrito
+    function mostrar_carrito() {
+        echo "<h4>Carrito</h4>";
+        try {
+            $conn = conexion();
+            
+            foreach ($_SESSION['productos'] as $key => $value) {
+
+                $stmt = $conn -> prepare(
+                "SELECT productName
+                 FROM products
+                 WHERE productCode = :productCode"
+                );
+
+                $stmt -> bindParam(':productCode', $key);
+                $stmt -> execute();
+                $stmt -> setFetchMode(PDO::FETCH_ASSOC);
+                $producto = $stmt -> fetchAll();
+
+                // Imprimir
+                echo $producto[0]['productName'] . ' x' . $value . '<br>';
+            }
+        }
+
+        catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+
+        $conn = null;
+    }
+
+    // agregar_producto_carrito
+    function agregar_producto_carrito($productCode, $cantidad) {
+        if(!isset($_SESSION['productos'])) {
+            $_SESSION['productos'] = [$productCode => $cantidad];
+        }
+
+        elseif (!isset($_SESSION['productos'][$productCode])){
+            $_SESSION['productos'][$productCode] = $cantidad;
+        }
+
+        else {
+            $_SESSION['productos'][$productCode] += $cantidad;
+        }
+    }
+
+    // mostrar_productos
+    function mostrar_productos() {
+
+        try {
+            $conn = conexion();
+            $stmt = $conn -> prepare(
+                "SELECT productCode, productName
+                 FROM products
+                 WHERE quantityInStock > 0");
+
+            $stmt -> execute();
+            $stmt -> setFetchMode(PDO::FETCH_ASSOC);
+            $productos = $stmt -> fetchAll();
+
+            foreach($productos as $producto) {
+                echo '<option value ="' . $producto['productCode'] . '">' . $producto['productName'] . '</option>';
+            }
+        }
+
+        catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+
+        finally {
+            $conn = null;
+        }
+    }
+    
+    // comprobar_credenciales
     function comprobar_credenciales($user, $password) {
         $inicia_sesion = false;
 
@@ -15,6 +143,10 @@
             $stmt -> execute();
             $stmt -> setFetchMode(PDO::FETCH_ASSOC);
             $usuario_encontrado = $stmt -> fetchAll();
+
+            if (!empty($usuario_encontrado)) {
+                $inicia_sesion = true;
+            }
         }
 
         catch (PDOException $e) {
@@ -25,6 +157,15 @@
             $conn = null;
             return $inicia_sesion;
         }
+    }
+
+    // cerrar_sesion
+    function cerrar_sesion() {
+        session_destroy();
+        session_unset();
+        setcookie("PHPSESSID", "", time() - 3600, "/");
+        header("Location: pe_login.php");
+        exit;
     }
 
     // Conexion a la base de datos
