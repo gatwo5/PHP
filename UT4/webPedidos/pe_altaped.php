@@ -67,7 +67,11 @@
             <button type="reset">Limpiar</button>
         </fieldset>
     </form>
-    
+
+    <br>
+    <form method="post">
+        <button type="submit" name="vaciar" value="vaciar">Vaciar carrito</button>
+    </form>
 </body>
 </html>
 
@@ -83,12 +87,22 @@
         mostrar_carrito();
     }
 
-    // Mostrar carrito
+    // Comprar 
 
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['comprar'])) {
         
         $comments = test_input($_POST['comments']);
+        $checkNumber = test_input($_POST['checkNumber']);
 
         realizar_orden($_SESSION['user'], $comments);
+        realizar_pago($checkNumber);
+    }
+
+    // Vaciar carrito
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['vaciar'])) {
+
+        $_SESSION['productos'] = null;
+        echo '';
     }
 ?>
