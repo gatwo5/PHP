@@ -1,4 +1,74 @@
 <?php
+
+    // consultar_pedidos
+    function consultar_pedidos($customerNumber) {
+
+        try {
+            $conn = conexion();
+            
+            // Pedido
+
+            $stmt = $conn -> prepare(
+                "SELECT orderNumber, orderDate, status
+                        FROM orders
+                        WHERE customerNumber = :customerNumber");
+
+            $stmt -> bindParam('customerNumber', $customerNumber);
+            $stmt -> execute();
+            $stmt -> setFetchMode(PDO::FETCH_ASSOC);
+            $pedidos = $stmt -> fetchAll();
+
+            // Productos del pedido
+
+            foreach ($pedidos as $pedido) {
+
+                $orderNumber = $pedido ['orderNumber'];
+                $orderDate = $pedido['orderDate'];
+                $status = $pedido['status'];
+
+                // Imprimir pedido
+                
+                echo '<h2> Pedido número ' . $orderNumber . '</h2>';
+                echo 'Fecha: ' . $orderDate . '<br>';
+                echo 'Estado: ' . $status . '<br>';
+
+                // Buscar productos del pedido 
+
+                $stmt = $conn -> prepare(
+                    "SELECT o.orderLineNumber, p.productName, o.quantityOrdered, o.priceEach
+                            FROM products p, orderdetails o
+                            WHERE o.orderNumber = :orderNumber AND p.productCode = o.productCode
+                            ORDER BY o.orderLineNumber");
+
+                $stmt -> bindParam('orderNumber', $orderNumber);
+                $stmt -> execute();
+                $stmt -> setFetchMode(PDO::FETCH_ASSOC);
+                $productos = $stmt -> fetchAll(); 
+
+                echo '<h4>Productos</h4>';
+
+                foreach ($productos as $producto) {
+                    $orderLineNumber = $producto['orderLineNumber'];
+                    $productName = $producto['productName'];
+                    $quantityOrdered = $producto['quantityOrdered'];
+                    $priceEach = $producto['priceEach'];
+
+                    // Imprimir productos pedido
+
+                    echo '<b>' . $orderLineNumber . '</b><br>';
+                    echo 'Producto: ' . $productName . '<br>';
+                    echo 'Cantidad: ' . $quantityOrdered . '<br>';
+                    echo 'Precio unidad: ' . $priceEach . '<br><br>';
+                }
+            }
+        }   
+
+        catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+
+        $conn = null;
+    }
     // actualizar_stock
     function actualizar_stock() {
         try {

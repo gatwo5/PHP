@@ -36,5 +36,6 @@
     </form>
 
     <a href="pe_altaped.php">Realizar pedidos</a><br>
+    <a href="pe_consped.php">Consultar pedidos</a>
 </body>
 </html>
