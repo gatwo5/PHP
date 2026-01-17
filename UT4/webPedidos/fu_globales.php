@@ -1,4 +1,29 @@
 <?php
+    // consultar_stock
+    function consultar_stock($productCode) {
+
+        try {
+            $conn = conexion();
+
+            $stmt = $conn -> prepare(
+                "SELECT quantityInStock
+                        FROM products
+                        WHERE productCode = :productCode");
+
+            $stmt -> bindParam('productCode', $productCode);
+            $stmt -> execute();
+            $stmt -> setFetchMode(PDO::FETCH_ASSOC);
+            $stock = $stmt -> fetchAll();
+
+            echo '<br><h2>Stock del producto ' . $productCode . ': ' . $stock[0]['quantityInStock'] . '</h2>';
+        }
+
+        catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+
+        $conn = null;
+    }
 
     // consultar_pedidos
     function consultar_pedidos($customerNumber) {
