@@ -1,4 +1,51 @@
 <?php
+    // consultar_pagos_entre_dos_fechas
+
+    function consultar_pagos_entre_dos_fechas($fecha_inicio, $fecha_fin){
+        
+        
+
+        try {
+            $conn = conexion();
+
+            if (empty($fecha_inicio) || empty($fecha_fin)) {
+                $stmt = $conn -> prepare(
+                "SELECT checkNumber, paymentDate, amount
+                        FROM payments
+                        WHERE customerNumber = :customerNumber
+                        ORDER BY paymentDate");
+            } else {
+                $stmt = $conn -> prepare(
+                "SELECT checkNumber, paymentDate, amount
+                        FROM payments
+                        WHERE customerNumber = :customerNumber
+                            AND (paymentDate BETWEEN :fecha_inicio AND :fecha_fin)
+                        ORDER BY paymentDate");
+
+                $stmt -> bindParam('fecha_inicio', $fecha_inicio);
+                $stmt -> bindParam('fecha_fin', $fecha_fin);
+            }
+
+            $stmt -> bindParam('customerNumber', $_SESSION['user']);
+
+            $stmt -> execute();
+            $stmt -> setFetchMode(PDO::FETCH_ASSOC);
+            $pagos = $stmt -> fetchAll();
+
+            foreach($pagos as $pago) {
+                echo 'checkNumber: ' . $pago['checkNumber'] . ' | Fecha: ' . $pago['paymentDate'] . ' | Precio: ' . $pago['amount'] . '<br>';
+            }
+        }
+
+        catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+
+        finally {
+            $conn = null;
+        }
+    }
+    
     // consultar_ventas_entre_dos_fechas
     function consultar_ventas_entre_dos_fechas($fecha_inicio, $fecha_fin) {
         try {

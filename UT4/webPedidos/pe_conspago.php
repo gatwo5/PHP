@@ -17,7 +17,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock total de todos los productos de una determinada linea de producto</title>
+    <title>Consultar pagos</title>
     <style>
         body {
             text-align: center;
@@ -31,25 +31,34 @@
         <input type="submit" name="cerrar_sesion" value="cerrar sesion">
     </form>
 
-    <h1>Consultar línea según stock</h1>
+    <h1>Consultar pagos</h1>
 
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
         <fieldset>
-            <legend>Linea productos</legend>
-            <select name="productLine">
-                <?php mostrar_linea_productos() ?>
-            </select>
+            <legend>Consultar ventas</legend>
+            
+            <p>
+                <label for="fecha_inicio">Fecha inicio</label>
+                <input type="date" name="fecha_inicio" id="fecha_inicio">
+            </p>
 
-            <button type="submit">Consultar stock</button>
+            <p>
+                <label for="fecha_fin">Fecha fin</label>
+                <input type="date" name="fecha_fin" id="fecha_fin">
+            </p>
+
+            <button type="submit">Consultar pagos</button>
         </fieldset>
     </form>
 </body>
 </html>
 
 <?php
-     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $productLine = test_input($_POST['productLine']);
 
-        mostrar_productos_segun_linea($productLine);
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $fecha_inicio = test_input($_POST['fecha_inicio']);
+        $fecha_fin = test_input($_POST['fecha_fin']);
+
+        consultar_pagos_entre_dos_fechas($fecha_inicio, $fecha_fin);
     }
 ?>

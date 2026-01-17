@@ -26,6 +26,7 @@
     </style>
 </head>
 <body>
+    <a href="pe_inicio.php">Inicio</a><br><br>
 
     <form method="post">
         <input type="submit" name="cerrar_sesion" value="cerrar sesion">

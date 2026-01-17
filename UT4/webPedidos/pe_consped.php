@@ -25,6 +25,7 @@
     </style>
 </head>
 <body>
+    <a href="pe_inicio.php">Inicio</a><br><br>
 
     <form method="post">
         <input type="submit" name="cerrar_sesion" value="cerrar sesion">
@@ -36,11 +37,6 @@
         <fieldset>
             <legend>Consultar productos</legend>
 
-            <p>
-                <label for="customerNumber">Número de cliente:</label>
-                <input type="number" name="customerNumber" id="customerNumber">
-            </p>
-
             <button type="submit">Consultar</button>
         </fieldset>
     </form>
@@ -49,7 +45,7 @@
 
 <?php 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $customerNumber = test_input($_POST['customerNumber']);
+        $customerNumber = $_SESSION['user'];
 
         consultar_pedidos($customerNumber);
     } 
