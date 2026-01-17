@@ -1,4 +1,38 @@
 <?php
+    // consultar_ventas_entre_dos_fechas
+    function consultar_ventas_entre_dos_fechas($fecha_inicio, $fecha_fin) {
+        try {
+            $conn = conexion();
+            $stmt = $conn -> prepare(
+                "SELECT productCode, SUM(quantityOrdered)
+                        FROM orderdetails
+                        WHERE orderNumber IN (
+                            SELECT orderNumber
+                            FROM orders
+                            WHERE orderDate BETWEEN :fecha_inicio AND :fecha_fin)
+                        GROUP BY productCode");
+
+            $stmt -> bindParam('fecha_inicio', $fecha_inicio);
+            $stmt -> bindParam('fecha_fin', $fecha_fin);
+
+            $stmt -> execute();
+            $stmt -> setFetchMode(PDO::FETCH_ASSOC);
+            $productos = $stmt -> fetchAll();
+
+            foreach ($productos as $producto) {
+                echo 'Producto: ' . $producto['productCode'] . ' | Cantidad vendida: ' . $producto['SUM(quantityOrdered)'] . '<br>';
+            }
+        }
+
+        catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+
+        finally {
+            $conn = null;
+        }
+    }
+
     // mostrar_productos_segun_linea
     function mostrar_productos_segun_linea($productLine) {
         try {

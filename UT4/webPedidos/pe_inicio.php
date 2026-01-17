@@ -39,5 +39,6 @@
     <a href="pe_consped.php">Consultar pedidos</a><br>
     <a href="pe_consprodstock.php">Consultar pedidos</a><br>
     <a href="pe_constock.php">Consultar pedidos de una línea de pedidos</a><br>
+    <a href="pe_topprod.php">Productos vendidos entre dos fechas</a><br>
 </body>
 </html>
