@@ -1,4 +1,59 @@
 <?php
+    // mostrar_productos_segun_linea
+    function mostrar_productos_segun_linea($productLine) {
+        try {
+            $conn = conexion();
+            $stmt = $conn -> prepare(
+                "SELECT productName, quantityInStock
+                        FROM products
+                        WHERE productLine = :productLine
+                        ORDER BY quantityInStock DESC");
+
+            $stmt -> bindParam('productLine', $productLine);
+            $stmt -> execute();
+            $stmt -> setFetchMode(PDO::FETCH_ASSOC);
+            $productos = $stmt -> fetchAll();
+
+            // Imprimir
+
+            foreach ($productos as $producto) {
+                echo $producto['productName'] . ': ' . $producto['quantityInStock'] . ' <br>';
+            }
+        }
+
+        catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+
+        finally {
+            $conn = null;
+        }
+    }
+    // mostrar_linea_productos
+    function mostrar_linea_productos() {
+        try {
+            $conn = conexion();
+            $stmt = $conn -> prepare(
+                "SELECT productLine
+                 FROM productlines");
+
+            $stmt -> execute();
+            $stmt -> setFetchMode(PDO::FETCH_ASSOC);
+            $lineaProductos = $stmt -> fetchAll();
+
+            foreach($lineaProductos as $lineaProducto) {
+                echo '<option value ="' . $lineaProducto['productLine'] . '">' . $lineaProducto['productLine'] . '</option>';
+            }
+        }
+
+        catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        }
+
+        finally {
+            $conn = null;
+        }
+    }
     // consultar_stock
     function consultar_stock($productCode) {
 

@@ -38,5 +38,6 @@
     <a href="pe_altaped.php">Realizar pedidos</a><br>
     <a href="pe_consped.php">Consultar pedidos</a><br>
     <a href="pe_consprodstock.php">Consultar pedidos</a><br>
+    <a href="pe_constock.php">Consultar pedidos de una línea de pedidos</a><br>
 </body>
 </html>
