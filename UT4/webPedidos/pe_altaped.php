@@ -93,9 +93,15 @@
         
         $comments = test_input($_POST['comments']);
         $checkNumber = test_input($_POST['checkNumber']);
-
+        
         realizar_orden($_SESSION['user'], $comments);
         realizar_pago($checkNumber);
+        detalles_orden();
+        actualizar_stock();
+
+        echo '<br>Compra realizada con éxito';
+
+        $_SESSION['productos'] = null;
     }
 
     // Vaciar carrito

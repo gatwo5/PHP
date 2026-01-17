@@ -1,4 +1,78 @@
 <?php
+    // actualizar_stock
+    function actualizar_stock() {
+        try {
+            $conn = conexion();
+            $conn -> beginTransaction();
+
+            foreach ($_SESSION['productos'] as $productCode => $cantidad) {
+                $stmt = $conn -> prepare(
+                    "UPDATE products
+                            SET quantityInStock = quantityInStock - :cantidad
+                            WHERE productCode = :productCode");
+
+            }
+
+            $stmt -> bindParam('cantidad', $cantidad);
+            $stmt -> bindParam('productCode', $productCode);
+                
+            $stmt -> execute();
+            $conn -> commit();
+        }
+
+        catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            $conn -> rollBack();
+        }
+
+        $conn = null;
+    }
+    // detalles_orden
+    function detalles_orden() {
+        $orderLineNumber = 1;
+
+        try {
+            $conn = conexion();
+            $conn -> beginTransaction();
+
+            foreach ($_SESSION['productos'] as $productCode => $cantidad) {
+                // Buscar precio
+                $stmt = $conn -> prepare(
+                    "SELECT buyPrice
+                     FROM products
+                     WHERE productCode = :productCode");
+                
+                $stmt -> bindParam(':productCode', $productCode);
+                $stmt -> execute();
+                $stmt -> setFetchMode(PDO::FETCH_ASSOC);
+                $producto = $stmt -> fetchAll();
+                
+                // Insertar orden
+                $stmt = $conn -> prepare(
+                    "INSERT INTO orderdetails (orderNumber, productCode, quantityOrdered, priceEach, orderLineNumber)
+                            VALUES (:orderNumber, :productCode, :quantityOrdered, :priceEach, :orderLineNumber)");
+
+                $stmt -> bindParam('orderNumber', $_SESSION['orderNumber']);
+                $stmt -> bindParam('productCode', $productCode);
+                $stmt -> bindParam('quantityOrdered', $cantidad);
+                $stmt -> bindParam('priceEach', $producto[0]['buyPrice']);
+                $stmt -> bindParam('orderLineNumber', $orderLineNumber);
+                
+                $stmt -> execute();
+                $conn -> commit();
+
+                $orderLineNumber++;
+            }
+        }
+
+        catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            $conn -> rollBack();
+        }
+
+        $conn = null;
+    }
+    
     // realizar_pago
     function realizar_pago($checkNumber) {
 
@@ -69,9 +143,10 @@
     
     // realizar_orden
     function realizar_orden($customerNumber, $comments) {
-
         $orderNumber = buscar_max_orderNumber();
         
+        $_SESSION['orderNumber'] = $orderNumber;
+
         try {
             $conn = conexion();
             $conn -> beginTransaction();
